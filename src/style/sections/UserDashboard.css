@@ -1,0 +1,160 @@
+.user-dashboard {
+  padding: 20px;
+  background-color: rgba(58, 53, 70, 0.1);
+  min-height: 100vh;
+}
+
+/* General Modal Styles */
+.user-modal {
+  background: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  max-width: 100%;
+  margin: 0 auto;
+  box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.user-modal__overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-modal__title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+  color: rgb(60 59 70);
+}
+
+.user-modal__form-group {
+  margin-bottom: 16px;
+}
+
+.user-modal__label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  font-weight: 500;
+  color: rgba(58, 53, 70);
+}
+
+.user-modal__input,
+.user-modal__input select {
+  font-family: "Plus Jakarta Sans", sans-serif;
+  color: rgba(6, 3, 24);
+  width: 100%;
+  padding: 8px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+.user-modal__form-group select,
+.user-modal__form-group select option {
+  cursor: pointer;
+}
+.user-modal__input:focus,
+.user-modal__input select:focus {
+  outline: none;
+  box-shadow: 0 0 4px rgba(58, 53, 70, 0.2);
+}
+
+.user-modal__actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.user-modal__cancel-button {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+.user-modal__cancel-button:hover {
+  background: rgb(236, 235, 240);
+}
+
+.user-modal__submit-button {
+  color: #fff;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+  font-family: "Plus Jakarta Sans", sans-serif;
+  background: rgba(65, 105, 225);
+}
+
+.user-modal__submit-button:hover {
+  background: #0056b3;
+}
+
+.user-modal__submit-button:disabled {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+
+/* Header Styles */
+.user-dashboard__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.user-dashboard__title {
+  font-size: 22px;
+  font-weight: 600;
+  color: rgb(60, 59, 70);
+}
+
+.user-dashboard__add-button {
+  display: flex;
+  align-items: center;
+  background: rgba(65, 105, 225);
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.user-dashboard__add-button:hover {
+  background: #0056b3;
+}
+
+.user-dashboard__icon {
+  margin-right: 8px;
+}
+
+/* User List Section */
+.user-dashboard__list {
+  margin-top: 20px;
+}
+
+@media only screen and (max-width: 800px) {
+  .user-dashboard {
+    padding: 10px;
+  }
+}

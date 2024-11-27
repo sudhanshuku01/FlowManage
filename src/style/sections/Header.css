@@ -1,0 +1,17 @@
+.header {
+  padding: 10px;
+  border-bottom: 1px solid rgba(58, 53, 70, 0.5);
+}
+.header h1 {
+  display: flex;
+  align-items: center;
+}
+.header h1 a {
+  font-weight: 600;
+  font-size: 26px;
+  color: #260742;
+  text-decoration: none;
+  margin-right: 20px;
+
+  font-family: "Oswald";
+}

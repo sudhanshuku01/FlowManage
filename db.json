@@ -1,0 +1,236 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "name": "Alice Johnson",
+      "email": "alice.johnson@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "name": "Bob Smith",
+      "email": "bob.smith@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "3",
+      "name": "Charlie Brown",
+      "email": "charlie.brown@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "4",
+      "name": "David Miller",
+      "email": "david.miller@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "5",
+      "name": "Eve Thompson",
+      "email": "eve.thompson@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "6",
+      "name": "Frank Wilson",
+      "email": "frank.wilson@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "7",
+      "name": "Grace Lee",
+      "email": "grace.lee@example.com",
+      "status": "active",
+      "role": "moderator"
+    },
+    {
+      "id": "8",
+      "name": "Hannah White",
+      "email": "hannah.white@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "9",
+      "name": "Ian Taylor",
+      "email": "ian.taylor@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "10",
+      "name": "Jane Moore",
+      "email": "jane.moore@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "11",
+      "name": "Kyle Anderson",
+      "email": "kyle.anderson@example.com",
+      "status": "active",
+      "role": "moderator"
+    },
+    {
+      "id": "12",
+      "name": "Laura Martinez",
+      "email": "laura.martinez@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "13",
+      "name": "Michael Garcia",
+      "email": "michael.garcia@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "14",
+      "name": "Nina Robinson",
+      "email": "nina.robinson@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "15",
+      "name": "Oliver Scott",
+      "email": "oliver.scott@example.com",
+      "status": "inactive",
+      "role": "moderator"
+    },
+    {
+      "id": "16",
+      "name": "Paul Harris",
+      "email": "paul.harris@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "17",
+      "name": "Quinn Hall",
+      "email": "quinn.hall@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "18",
+      "name": "Rachel Young",
+      "email": "rachel.young@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "19",
+      "name": "Samuel King",
+      "email": "samuel.king@example.com",
+      "status": "active",
+      "role": "moderator"
+    },
+    {
+      "id": "20",
+      "name": "Tina Adams",
+      "email": "tina.adams@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "21",
+      "name": "Uma Perez",
+      "email": "uma.perez@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "22",
+      "name": "Victor Nelson",
+      "email": "victor.nelson@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "23",
+      "name": "Wendy Carter",
+      "email": "wendy.carter@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "24",
+      "name": "Xavier Rivera",
+      "email": "xavier.rivera@example.com",
+      "status": "active",
+      "role": "moderator"
+    },
+    {
+      "id": "25",
+      "name": "Yvonne Bailey",
+      "email": "yvonne.bailey@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "26",
+      "name": "Zachary Cooper",
+      "email": "zachary.cooper@example.com",
+      "status": "active",
+      "role": "admin"
+    },
+    {
+      "id": "27",
+      "name": "Ashley Evans",
+      "email": "ashley.evans@example.com",
+      "status": "active",
+      "role": "editor"
+    },
+    {
+      "id": "28",
+      "name": "Brian Foster",
+      "email": "brian.foster@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    },
+    {
+      "id": "29",
+      "name": "Chloe Gonzalez",
+      "email": "chloe.gonzalez@example.com",
+      "status": "active",
+      "role": "moderator"
+    },
+    {
+      "id": "30",
+      "name": "Dylan Hernandez",
+      "email": "dylan.hernandez@example.com",
+      "status": "inactive",
+      "role": "viewer"
+    }
+  ],
+  "roles": [
+    {
+      "id": "admin",
+      "name": "Admin",
+      "permissions": ["Create", "Read", "Update", "Delete", "Manage"]
+    },
+    {
+      "id": "editor",
+      "name": "Editor",
+      "permissions": ["Create", "Read", "Update", "Delete"]
+    },
+    {
+      "id": "moderator",
+      "name": "Moderator",
+      "permissions": ["Read", "Update", "Moderate"]
+    },
+    {
+      "id": "viewer",
+      "name": "Viewer",
+      "permissions": ["Read"]
+    }
+  ]
+}
