@@ -4,20 +4,23 @@ import Layout from "../Layout/Layout";
 import { IoMdAddCircle } from "react-icons/io";
 import Modal from "react-modal";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 interface Role {
-  id: string;
+  _id: string;
   name: string;
   permissions: string[];
 }
 
 Modal.setAppElement("#root");
-const baseUrl='http://localhost:5000';
 
 const RoleDashboard: React.FC = () => {
   const [roles, setRoles] = useState<Role[]>([]);
+
   const [roleName, setRoleName] = useState<string>("");
+
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
+
   const [permissions] = useState<string[]>(["Read", "Write", "Delete"]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -25,12 +28,12 @@ const RoleDashboard: React.FC = () => {
   useEffect(() => {
     const fetchRoles = async () => {
       try {
-        const response = await fetch(`${baseUrl}/api/roles`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch roles");
+        const response = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/roles`
+        );
+        if (response.data.success) {
+          setRoles(response.data.roles);
         }
-        const data = await response.json();
-        setRoles(data);
       } catch (err) {
         toastMessage((err as Error).message, "❌");
       }
@@ -52,28 +55,28 @@ const RoleDashboard: React.FC = () => {
 
     try {
       setLoading(true);
-      const newRole: Omit<Role, "id"> = {
+
+      const newRole = {
         name: roleName,
         permissions: selectedPermissions,
       };
 
-      const response = await fetch(`${baseUrl}/api/roles`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newRole),
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/roles`,
+        newRole
+      );
+      console.log(response);
 
-      if (!response.ok) {
-        throw new Error("Failed to create role");
+      if (response.data.success) {
+        const createdRole = await response.data.role;
+        setRoles([...roles, createdRole]);
+        setRoleName("");
+        setSelectedPermissions([]);
+        setIsModalOpen(false);
+        toastMessage(response.data.message, "👏");
+      } else {
+        toastMessage(response.data.message, "❌");
       }
-
-      const crertedRole = await response.json();
-      setRoles([...roles, crertedRole]);
-      setRoleName("");
-      setSelectedPermissions([]);
-      setIsModalOpen(false);
     } catch (err) {
       toastMessage((err as Error).message, "❌");
     } finally {
@@ -109,7 +112,13 @@ const RoleDashboard: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout
+      title="Role Management Dashboard | RoleGuard"
+      description="Streamline role-based access control with the Role Management Dashboard in RoleGuard. Create, edit, and manage roles and permissions for users effortlessly."
+      keywords="role management, role-based access control, RBAC, manage roles, permissions, admin tools, RoleGuard, access control"
+      author="Sudhanshu Kushwaha"
+      type="website"
+    >
       <div className="role-dashboard">
         <div className="role-dashboard__header">
           <h1 className="role-dashboard__title">Role Dashboard</h1>

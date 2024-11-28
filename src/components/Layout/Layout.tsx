@@ -19,19 +19,16 @@ interface LayoutProps {
 
 const Layout: React.FC<LayoutProps> = ({
   children,
-  title = "Role Gaurd | User Management | Role Management",
-  description = "It's an application for the users and roles management",
-  keywords = " web development, mobile app development, React, Node.js, Java, JavaScript, developer, projects",
-  author = "Sudhanshu",
+  title = "FlowManage | Advanced Role & User Management System",
+  description = "Effortlessly manage users, roles, and permissions with RoleGuard. An advanced application designed for seamless user and role administration.",
+  keywords = "user management, role management, role-based access control, RBAC, React, Node.js, permissions management, admin dashboard, React applications",
+  author = "Sudhanshu Kushwaha",
   type = "website",
-  url = "",
-  image = "",
 }) => {
   return (
     <div>
       <Helmet>
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href={url} />
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="keywords" content={keywords} />
@@ -40,29 +37,24 @@ const Layout: React.FC<LayoutProps> = ({
         <meta property="og:type" content={type} />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:url" content={url} />
-        <meta property="og:image" content={image} />
-        <meta property="og:site_name" content="Sudhanshine" />
+        <meta property="og:site_name" content="RoleGuard" />
         {/* Twitter */}
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:site" content="@sudhanshukushwaha" />
         <meta name="twitter:creator" content={author} />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
-        <meta name="twitter:image" content={image} />
         {/* Structured Data */}
         <script type="application/ld+json">
           {JSON.stringify({
             "@context": "https://schema.org",
             "@type": "WebSite",
-            url: url,
             name: title,
             author: {
               "@type": "Person",
               name: author,
             },
             description: description,
-            image: image,
           })}
         </script>
       </Helmet>
@@ -70,12 +62,12 @@ const Layout: React.FC<LayoutProps> = ({
       <nav className="layout-nav">
         <ul>
           <li>
-            <NavLink to="/users" title="Manage users in Role Guard">
+            <NavLink to="/users" title="Manage users in RoleGuard">
               Users Management
             </NavLink>
           </li>
           <li>
-            <NavLink to="/roles" title="Manage roles in Role Guard">
+            <NavLink to="/roles" title="Manage roles in RoleGuard">
               Roles Management
             </NavLink>
           </li>

@@ -7,12 +7,18 @@ import userRoutes from "./routes/userRoutes.js";
 import roleRoutes from "./routes/roleRoutes.js";
 
 dotenv.config();
-  
+
 const app = express();
 connectDB();
 
 // Middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://flowmanage.netlify.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
 app.use(bodyParser.json());
 
 // Routes

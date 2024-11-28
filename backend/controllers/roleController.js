@@ -1,5 +1,4 @@
 import { Role } from "../models/role.js";
-import { successResponse, errorResponse } from "../utils/apiResponse.js";
 
 //Get all role
 export const getRoles = async (req, res) => {
@@ -14,10 +13,12 @@ export const getRoles = async (req, res) => {
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
+
 // Create a role
 export const createRole = async (req, res) => {
   try {
     const { name, permissions } = req.body;
+    console.log(req.body);
     const role = await Role.create({ name, permissions });
     res.status(200).json({
       success: true,
@@ -25,6 +26,7 @@ export const createRole = async (req, res) => {
       role,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -33,11 +35,16 @@ export const createRole = async (req, res) => {
 export const editRole = async (req, res) => {
   try {
     const { id } = req.params;
-    const updatedRole = await Role.findByIdAndUpdate(id, req.body, {
+    const role = await Role.findByIdAndUpdate(id, req.body, {
       new: true,
     });
-    successResponse(res, "Role updated successfully", updatedRole);
+    res.status(200).json({
+      success: true,
+      message: "Role updated successfully",
+      role,
+    });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

@@ -4,26 +4,27 @@ import { FiMoreHorizontal } from "react-icons/fi";
 import { IoSearchOutline } from "react-icons/io5";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import axios from "axios";
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   status: "active" | "inactive";
-  role: string | null;
+  role: string;
 }
 
 interface Role {
-  id: string;
+  _id: string;
   name: string;
   permissions: string[];
 }
+
 interface UserListProps {
   users: User[];
   setUsers: Dispatch<SetStateAction<User[]>>;
   roles: Role[];
 }
-const baseUrl = "http://localhost:5000";
 const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
   const [loading, setLoading] = useState(false);
 
@@ -34,13 +35,13 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
   );
 
   const [editingUser, setEditingUser] = useState<User | null>(null);
-  const [dropdownUserId, setDropdownUserId] = useState<string | null>(null);
+  const [dropdownUserId, setDropdownUserId] = useState<string>("");
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const dropdownElement = document.querySelector(".dropdown-menu");
       if (dropdownElement && !dropdownElement.contains(event.target as Node)) {
-        setDropdownUserId(null);
+        setDropdownUserId("");
       }
     };
 
@@ -95,34 +96,21 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
 
   const handleEditUser = async (updatedUser: User) => {
     try {
-      const isDuplicate = users.some(
-        (user) => user.email === updatedUser.email && user.id !== updatedUser.id
-      );
-      if (isDuplicate) {
-        toastMessage(
-          "Email already exists. Please use a different email.",
-          "❌"
-        );
-        return;
-      }
-
       setLoading(true);
-      const response = await fetch(`${baseUrl}/api/users/${updatedUser.id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updatedUser),
-      });
-      if (!response.ok) {
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/${updatedUser._id}`,
+        updatedUser
+      );
+      if (!response.data.success) {
         throw new Error("Failed to update user");
       }
-      const updatedData = await response.json();
+      const updatedData = await response.data.user;
       setUsers((prevUsers) =>
         prevUsers.map((user) =>
-          user.id === updatedData.id ? updatedData : user
+          user._id === updatedData._id ? updatedData : user
         )
       );
+
       toastMessage("User updated successfully.", "👏");
       setEditingUser(null);
     } catch (err) {
@@ -140,14 +128,15 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
 
     try {
       setLoading(true);
-      const response = await fetch(`${baseUrl}/api/users/${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete user");
+      const response = await axios.delete(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users/${id}`
+      );
+      if (response.data.success) {
+        setUsers((prevUsers) => prevUsers.filter((user) => user._id !== id));
+        toastMessage(response.data.message, "👏");
+      } else {
+        toastMessage(response.data.message, "❌");
       }
-      setUsers((prevUsers) => prevUsers.filter((user) => user.id !== id));
-      toastMessage("User deleted successfully.", "👏");
     } catch (err) {
       toastMessage((err as Error).message, "❌");
     } finally {
@@ -174,6 +163,7 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
       },
     });
   };
+  console.log(editingUser);
 
   return (
     <div className="user-list__container">
@@ -218,7 +208,7 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
           </thead>
           <tbody>
             {filteredUsers.map((user) => (
-              <tr key={user.id}>
+              <tr key={user._id}>
                 <td>{user.name}</td>
                 <td>
                   <Link
@@ -239,7 +229,7 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
                   </span>
                 </td>
                 <td>
-                  {roles.find((role) => role.id === user.role)?.name ||
+                  {roles.find((role) => role._id === user.role)?.name ||
                     "No Role"}
                 </td>
                 <td>
@@ -248,17 +238,17 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
                       className="actions-icon"
                       onClick={() =>
                         setDropdownUserId(
-                          dropdownUserId === user.id ? null : user.id
+                          dropdownUserId === user._id ? "" : user._id
                         )
                       }
                     />
-                    {dropdownUserId === user.id && (
+                    {dropdownUserId === user._id && (
                       <div className="dropdown-menu">
                         <button
                           className="dropdown-item"
                           onClick={() => {
                             setEditingUser(user);
-                            setDropdownUserId(null);
+                            setDropdownUserId("");
                           }}
                         >
                           Edit
@@ -266,8 +256,8 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
                         <button
                           className="dropdown-item"
                           onClick={() => {
-                            handleDeleteUser(user.id);
-                            setDropdownUserId(null);
+                            handleDeleteUser(user._id);
+                            setDropdownUserId("");
                           }}
                         >
                           Delete
@@ -340,17 +330,16 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
               <label className="user-modal__label">Role:</label>
               <select
                 className="user-modal__input"
-                value={editingUser.role || ""}
-                onChange={(e) =>
+                value={editingUser.role}
+                onChange={(e) => {
                   setEditingUser({
                     ...editingUser,
-                    role: e.target.value || null,
-                  })
-                }
+                    role: e.target.value,
+                  });
+                }}
               >
-                <option value="">No Role</option>
                 {roles.map((role) => (
-                  <option key={role.id} value={role.id}>
+                  <option key={role._id} value={role._id}>
                     {role.name}
                   </option>
                 ))}

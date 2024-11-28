@@ -1,13 +1,13 @@
 import { User } from "../models/user.js";
-import { successResponse, errorResponse } from "../utils/apiResponse.js";
+import { Role } from "../models/role.js";
 
 // Get All Users API
 export const getAllUsers = async (req, res) => {
   try {
-    const users = await User.find().populate("role", "name permissions");
+    const users = await User.find();
     res.status(200).json({
       success: true,
-      message:'Found users successfully',
+      message: "Found users successfully",
       users,
     });
   } catch (error) {
@@ -29,8 +29,9 @@ export const createUser = async (req, res) => {
         .json({ success: false, message: "Invalid role ID provided." });
     }
 
-    const userExists = await User.findOne(email);
-    if (!userExists) {
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
       return res
         .status(400)
         .json({ success: false, message: "Email already exist." });
@@ -38,10 +39,12 @@ export const createUser = async (req, res) => {
 
     const user = new User({ name, email, status, role });
     await user.save();
+
     res
       .status(201)
       .json({ success: true, message: "User created successfully.", user });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -49,16 +52,25 @@ export const createUser = async (req, res) => {
 // Edit a user
 export const editUser = async (req, res) => {
   try {
+    const userExists = await User.findOne({ email: req.body.email });
+    if (!userExists) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Email already exist." });
+    }
+
     const { id } = req.params;
-    const updatedUser = await User.findByIdAndUpdate(id, req.body, {
+    const user = await User.findByIdAndUpdate(id, req.body, {
       new: true,
     });
+
     res.status(201).json({
       success: true,
       message: "User updated successfully.",
-      updatedUser,
+      user,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };
@@ -73,6 +85,7 @@ export const deleteUser = async (req, res) => {
       message: "User deleted successfully.",
     });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, message: "Internal server error" });
   }
 };

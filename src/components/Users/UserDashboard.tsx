@@ -4,23 +4,23 @@ import toast from "react-hot-toast";
 import UserList from "./UserList";
 import Layout from "../Layout/Layout";
 import { IoMdAddCircle } from "react-icons/io";
+import axios from "axios";
 
 Modal.setAppElement("#root"); // Set the app element for accessibility
 
 interface User {
-  id: string;
+  _id: string;
   name: string;
   email: string;
   status: "active" | "inactive";
-  role: string | null;
+  role: string;
 }
 
 interface Role {
-  id: string;
+  _id: string;
   name: string;
   permissions: string[];
 }
-const baseUrl = "http://localhost:5000";
 
 const UserDashboard: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
@@ -28,26 +28,10 @@ const UserDashboard: React.FC = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"active" | "inactive">("inactive");
-  const [role, setRole] = useState<string | null>(null);
+  const [role, setRole] = useState<string>("");
+
   const [loading, setLoading] = useState(false);
   const [roles, setRoles] = useState<Role[]>([]);
-
-  useEffect(() => {
-    const fetchRoles = async () => {
-      try {
-        const response = await fetch(`${baseUrl}/api/roles`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch roles");
-        }
-        const data: Role[] = await response.json();
-        setRoles(data);
-      } catch (err) {
-        toast.error((err as Error).message);
-      }
-    };
-
-    fetchRoles();
-  }, []);
 
   const openModal = () => setModalIsOpen(true);
   const closeModal = () => {
@@ -55,7 +39,7 @@ const UserDashboard: React.FC = () => {
     setName("");
     setEmail("");
     setStatus("inactive");
-    setRole(null);
+    setRole("");
   };
 
   const handleCreateUser = async (e: React.FormEvent) => {
@@ -63,7 +47,6 @@ const UserDashboard: React.FC = () => {
     setLoading(true);
 
     try {
-
       const newUser = {
         name,
         email,
@@ -71,21 +54,19 @@ const UserDashboard: React.FC = () => {
         role,
       };
 
-      const createResponse = await fetch(`${baseUrl}/api/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newUser),
-      });
-      console.log(createResponse)
-      const updatedUser = await createResponse.json();
-
-      toastMessage("User created successfully!", "👏");
-      setUsers([...users, updatedUser]);
+      const createResponse = await axios.post(
+        `${import.meta.env.VITE_API_BASE_URL}/api/users`,
+        newUser
+      );
+      if (createResponse && createResponse.data.success) {
+        setUsers([...users, createResponse.data.user]);
+        toastMessage(createResponse.data.message, "👏");
+      } else {
+        toastMessage(createResponse.data.message, "❌");
+      }
       closeModal();
     } catch (err) {
-      toast.error((err as Error).message);
+      toastMessage((err as Error).message, "❌");
     } finally {
       setLoading(false);
     }
@@ -94,13 +75,17 @@ const UserDashboard: React.FC = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const usersResponse = await fetch(`${baseUrl}/api/users`);
-        const rolesResponse = await fetch(`${baseUrl}/api/roles`);
-        if (!usersResponse.ok || !rolesResponse.ok) {
+        const usersResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/users`
+        );
+        const rolesResponse = await axios.get(
+          `${import.meta.env.VITE_API_BASE_URL}/api/roles`
+        );
+        if (!usersResponse.data.success || !rolesResponse.data.success) {
           throw new Error("Failed to fetch data");
         }
-        const usersData = await usersResponse.json();
-        const rolesData = await rolesResponse.json();
+        const usersData = await usersResponse.data.users;
+        const rolesData = await rolesResponse.data.roles;
         setUsers(usersData);
         setRoles(rolesData);
       } catch (err) {
@@ -131,7 +116,13 @@ const UserDashboard: React.FC = () => {
   };
 
   return (
-    <Layout>
+    <Layout
+      title="User Management Dashboard | FlowManage"
+      description="Efficiently manage users with the User Management Dashboard in RoleGuard. Create, edit, and manage user roles and permissions seamlessly."
+      keywords="user management dashboard, manage users, role-based access control, RBAC, user roles, admin tools, RoleGuard"
+      author="Sudhanshu Kushwaha"
+      type="website"
+    >
       <section className="user-dashboard">
         <header className="user-dashboard__header">
           <h1 className="user-dashboard__title">User Dashboard</h1>
@@ -199,7 +190,7 @@ const UserDashboard: React.FC = () => {
               <select
                 id="user-role"
                 value={role || ""}
-                onChange={(e) => setRole(e.target.value || null)}
+                onChange={(e) => setRole(e.target.value || "")}
                 required
                 className="user-modal__input"
               >
@@ -207,7 +198,7 @@ const UserDashboard: React.FC = () => {
                   Select Role
                 </option>
                 {roles.map((r) => (
-                  <option key={r.id} value={r.name}>
+                  <option key={r._id} value={r._id}>
                     {r.name}
                   </option>
                 ))}

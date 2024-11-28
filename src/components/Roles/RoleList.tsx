@@ -2,9 +2,10 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { FiMoreHorizontal } from "react-icons/fi";
 import toast from "react-hot-toast";
+import axios from "axios";
 
 interface Role {
-  id: string;
+  _id: string;
   name: string;
   permissions: string[];
 }
@@ -14,10 +15,10 @@ interface RoleListProps {
   roles: Role[];
   setRoles: React.Dispatch<React.SetStateAction<Role[]>>;
 }
-const baseUrl='http://localhost:5000';
 
 const RoleList: React.FC<RoleListProps> = ({ roles, setRoles }) => {
   const [editingRole, setEditingRole] = useState<Role | null>(null);
+
   const [roleName, setRoleName] = useState<string>("");
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -37,34 +38,28 @@ const RoleList: React.FC<RoleListProps> = ({ roles, setRoles }) => {
 
     try {
       setLoading(true);
-      const updatedRole: Role = {
-        id: editingRole!.id,
+      const updatedRole = {
         name: roleName,
         permissions: selectedPermissions,
       };
 
-      const response = await fetch(
-        `${baseUrl}/api/roles/${editingRole!.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(updatedRole),
-        }
+      const response = await axios.put(
+        `${import.meta.env.VITE_API_BASE_URL}/api/roles/${editingRole!._id}`,
+        updatedRole
       );
 
-      if (!response.ok) {
-        throw new Error("Failed to update role");
+      if (response.data.success) {
+        toastMessage(response.data.message, "👏");
+        const updatedRoleData = await response.data.role;
+        setRoles((prevRoles) =>
+          prevRoles.map((role) =>
+            role._id === updatedRoleData._id ? updatedRoleData : role
+          )
+        );
+        closeModal();
+      } else {
+        toastMessage(response.data.message, "❌");
       }
-
-      const updatedRoleData = await response.json();
-      setRoles((prevRoles) =>
-        prevRoles.map((role) =>
-          role.id === updatedRoleData.id ? updatedRoleData : role
-        )
-      );
-      closeModal();
     } catch (err) {
       toastMessage((err as Error).message, "❌");
     } finally {
@@ -138,7 +133,7 @@ const RoleList: React.FC<RoleListProps> = ({ roles, setRoles }) => {
           </thead>
           <tbody>
             {roles.map((role) => (
-              <tr key={role.id}>
+              <tr key={role._id}>
                 <td>{role.name}</td>
                 <td>{role.permissions.join(", ")}</td>
                 <td>
@@ -147,11 +142,11 @@ const RoleList: React.FC<RoleListProps> = ({ roles, setRoles }) => {
                       className="actions-icon"
                       onClick={() =>
                         setDropdownRoleId(
-                          dropdownRoleId === role.id ? null : role.id
+                          dropdownRoleId === role._id ? null : role._id
                         )
                       }
                     />
-                    {dropdownRoleId === role.id && (
+                    {dropdownRoleId === role._id && (
                       <div className="dropdown-menu">
                         <button
                           className="dropdown-item"
