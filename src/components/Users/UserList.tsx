@@ -163,7 +163,6 @@ const UserList: React.FC<UserListProps> = ({ users, setUsers, roles }) => {
       },
     });
   };
-  console.log(editingUser);
 
   return (
     <div className="user-list__container">

@@ -65,7 +65,6 @@ const RoleDashboard: React.FC = () => {
         `${import.meta.env.VITE_API_BASE_URL}/api/roles`,
         newRole
       );
-      console.log(response);
 
       if (response.data.success) {
         const createdRole = await response.data.role;
